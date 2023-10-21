@@ -48,7 +48,7 @@ export default function Home() {
 					Messages
 				</div>
 				<div
-					className="flex items-center border-2 w-screen bg-white hover:bg-gray-100 h-[5rem]"
+					className="flex items-center p-4 border-2 w-screen bg-white hover:bg-gray-100 h-[5rem]"
 					onClick={handleClick}
 				>
 					<img
