@@ -68,7 +68,6 @@ export default function Chat(props: ChatProps) {
 		});
 	};
 	const Loader = () => {
-		console.log("adsfsa");
 		if (isLoadiing)
 			return (
 				<div className="text-2xl flex justify-center ">

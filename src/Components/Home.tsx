@@ -30,8 +30,6 @@ export default function Home() {
 			const chat: AxiosResponse<ChatData> = await axios.get(
 				"https://qa.corider.in/assignment/chat?page=0"
 			);
-			console.log(chat.data);
-
 			setData(chat.data);
 		};
 		getChat();
