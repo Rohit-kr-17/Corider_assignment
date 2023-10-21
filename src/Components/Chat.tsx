@@ -160,7 +160,7 @@ export default function Chat(props: ChatProps) {
 				</div>
 			</div>
 			<div className="flex items-center justify-center bg-gray-200 z-10 shadow-top p-4 h-20">
-				<div className="flex items-center w-[98%] bg-white rounded-lg h-[90%]">
+				<div className="flex items-center justify-between w-[98%] p-4 bg-white rounded-lg h-[90%]">
 					<input
 						type="text"
 						className="w-[80%] p-2 outline-none"
