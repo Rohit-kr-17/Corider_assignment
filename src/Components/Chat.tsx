@@ -112,7 +112,10 @@ export default function Chat(props: ChatProps) {
 			<div className="bg-gray-200 h-auto border-b-2 p-4 shadow-lg z-10">
 				<div className="flex items-center justify-between">
 					<div className="flex items-center">
-						<span className="text-2xl" onClick={handleClick}>
+						<span
+							className="text-2xl hover:cursor-pointer"
+							onClick={handleClick}
+						>
 							<BiArrowBack />
 						</span>
 						<span className="text-[1.5rem] ml-2 font-bold">
@@ -160,15 +163,15 @@ export default function Chat(props: ChatProps) {
 				</div>
 			</div>
 			<div className="flex items-center justify-center bg-gray-200 z-10 shadow-top p-4 h-20">
-				<div className="flex items-center justify-between w-[98%] p-4 bg-white rounded-lg h-[90%]">
+				<div className="flex items-center  justify-between w-full pr-4 bg-white rounded-lg h-[90%]">
 					<input
 						type="text"
-						className="w-[80%] p-2 outline-none"
+						className="w-full pl-4 rounded-l-lg h-full hover:bg-gray-100 outline-none"
 						placeholder="Enter your text"
 					/>
 					<div className="flex items-center justify-between">
-						<ImAttachment className="text-xl mr-4" />
-						<VscSend className="text-2xl" />
+						<ImAttachment className="text-xl hover:cursor-pointer mr-4" />
+						<VscSend className="text-2xl hover:cursor-pointer" />
 					</div>
 				</div>
 			</div>
