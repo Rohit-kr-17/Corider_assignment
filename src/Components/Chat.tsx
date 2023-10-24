@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import axios, { AxiosResponse } from "axios";
 
 import { BiLoaderAlt } from "react-icons/bi";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 type ChatProps = {
 	setShowChat: React.Dispatch<React.SetStateAction<boolean>>;
@@ -50,7 +51,6 @@ export default function Chat(props: ChatProps) {
 			if (chatContainerRef.current.scrollTop === 0) {
 				setIsLoading(true);
 				setPageNo(pageNo + 1);
-
 				getMoreChats();
 				chatContainerRef.current.scrollTop = currScrollpos;
 			} else setIsLoading(false);
@@ -58,13 +58,24 @@ export default function Chat(props: ChatProps) {
 	};
 
 	const getMoreChats = async () => {
-		const data = await axios.get(
-			`https://qa.corider.in/assignment/chat?page=${pageNo}`
-		);
-		if (data) {
-			setIsLoading(false);
-			if (props.chatData)
-				props.chatData.chats = [...data.data.chats, ...props.chatData.chats];
+		try {
+			const response = await axios.get(
+				`https://qa.corider.in/assignment/chat?page=${pageNo + 1}`
+			);
+			setPageNo(pageNo + 1);
+			console.log("Fetching data");
+
+			if (response.data) {
+				setIsLoading(false);
+				if (props.chatData) {
+					props.chatData.chats = [
+						...response.data.chats,
+						...props.chatData.chats,
+					];
+				}
+			}
+		} catch (error) {
+			console.error("Error fetching data:", error);
 		}
 	};
 
@@ -75,13 +86,12 @@ export default function Chat(props: ChatProps) {
 	}, []);
 
 	const Loader = () => {
-		if (isLoadiing)
-			return (
-				<div className="text-2xl h-5 flex justify-center ">
-					<BiLoaderAlt className="transition animate-spin" />
-				</div>
-			);
-		else return <></>;
+		return (
+			<div className="text-2xl h-5 flex justify-center ">
+				<BiLoaderAlt className="transition animate-spin" />
+			</div>
+		);
+		// else return <></>;
 	};
 
 	return (
@@ -204,7 +214,7 @@ export default function Chat(props: ChatProps) {
 				</div>
 			</div>
 			{isLoadiing && Loader()}
-			<div
+			{/* <div
 				ref={chatContainerRef}
 				onScroll={handleScroll}
 				className="bg-[#FAF9F4] flex-1  overflow-y-auto"
@@ -213,6 +223,28 @@ export default function Chat(props: ChatProps) {
 					{props.chatData?.chats &&
 						props.chatData?.chats.map((chat) => <Message chat={chat} />)}
 				</div>
+			</div> */}
+			<div
+				id="scrollableDiv"
+				style={{
+					overflow: "auto",
+					display: "flex",
+					flexDirection: "column-reverse",
+				}}
+				ref={chatContainerRef}
+			>
+				<InfiniteScroll
+					dataLength={props.chatData?.chats.length || 0}
+					next={getMoreChats}
+					style={{ display: "flex", flexDirection: "column-reverse" }} //To put endMessage and loader to the top.
+					inverse={true}
+					hasMore={true}
+					loader={Loader()}
+					scrollableTarget="scrollableDiv"
+				>
+					{props.chatData?.chats &&
+						props.chatData?.chats.map((chat) => <Message chat={chat} />)}
+				</InfiniteScroll>
 			</div>
 
 			<div className="flex items-center justify-center bg-[#FAF9F4] z-10 shadow-top p-4 h-20">
@@ -224,15 +256,11 @@ export default function Chat(props: ChatProps) {
 					/>
 					{/* <Attachment /> */}
 					<div className="flex items-center justify-between">
-						<div className="flex relative flex-col justify-center items-center">
-							{viewAttachment && (
-								<div className="absolute translate-y-[-45px] translate-x-[-7px] flex flex-col items-center justify-center rounded-full p-1 cursor-pointer">
-									<Attachment />
-								</div>
-							)}
+						<div className="flex items-center justify-center ">
+							{viewAttachment && <Attachment />}
 							<svg
 								onClick={handleAttachment}
-								className="mr-4"
+								className="mr-4 "
 								width="20"
 								height="20"
 								viewBox="0 0 20 20"
@@ -303,7 +331,7 @@ export const Message = (props: MessageProps) => {
 export const Attachment = () => {
 	return (
 		<>
-			<div className="h-[44px] pt-[12px] pr-[16px] pb-[12px] pl-[16px] items-center w-[124px] border-1 border-[#008000] bg-[#008000] rounded-full flex justify-between">
+			<div className=" absolute translate-y-[-45px] translate-x-[-7px] h-[44px] pt-[12px] pr-[16px] pb-[12px] pl-[16px] items-center w-[124px] border-1 border-[#008000] bg-[#008000] rounded-full flex justify-between">
 				<svg
 					width="20"
 					height="20"
@@ -364,7 +392,8 @@ export const Attachment = () => {
 					/>
 				</svg>
 			</div>
-			<div className="w-[16px] h-[8px] border-1 rotate-45 translate-y-[-6px] border-[#008000] bg-[#008000]"></div>
+
+			<div className="w-[16px] h-[8px] border-1 rotate-45 translate-y-[-25px] translate-x-[12px] border-[#008000] bg-[#008000]"></div>
 		</>
 	);
 };
