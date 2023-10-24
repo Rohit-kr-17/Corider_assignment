@@ -46,26 +46,25 @@ export default function Chat(props: ChatProps) {
 	const handleAttachment = () => {
 		setViewAttachment(!viewAttachment);
 	};
-	// const handleScroll = () => {
-	// 	if (chatContainerRef.current) {
-	// 		if (chatContainerRef.current.scrollTop === 0) {
-	// 			setIsLoading(true);
-	// 			setPageNo(pageNo + 1);
-	// 			getMoreChats();
-	// 			chatContainerRef.current.scrollTop = currScrollpos;
-	// 		} else setIsLoading(false);
-	// 	}
-	// };
+	const handleScroll = () => {
+		if (chatContainerRef.current) {
+			if (chatContainerRef.current.scrollTop === 0) {
+				setIsLoading(true);
+				setPageNo(pageNo + 1);
+				getMoreChats();
+				chatContainerRef.current.scrollTop = currScrollpos;
+			} else setIsLoading(false);
+		}
+	};
 
 	const getMoreChats = async () => {
 		try {
-			setIsLoading(true);
 			const response = await axios.get(
 				`https://qa.corider.in/assignment/chat?page=${pageNo + 1}`
 			);
 			setPageNo(pageNo + 1);
-			//console.log("Fetching data");
-			// console.log(props.chatData?.chats);
+			console.log("Fetching data");
+
 			if (response.data) {
 				setIsLoading(false);
 				if (props.chatData) {
@@ -75,7 +74,6 @@ export default function Chat(props: ChatProps) {
 					];
 				}
 			}
-			// console.log(props.chatData?.chats);
 		} catch (error) {
 			console.error("Error fetching data:", error);
 		}
@@ -241,13 +239,11 @@ export default function Chat(props: ChatProps) {
 					style={{ display: "flex", flexDirection: "column-reverse" }} //To put endMessage and loader to the top.
 					inverse={true}
 					hasMore={true}
-					loader={<></>}
+					loader={Loader()}
 					scrollableTarget="scrollableDiv"
 				>
 					{props.chatData?.chats &&
-						props.chatData?.chats
-							.reverse()
-							.map((chat) => <Message chat={chat} />)}
+						props.chatData?.chats.map((chat) => <Message chat={chat} />)}
 				</InfiniteScroll>
 			</div>
 
